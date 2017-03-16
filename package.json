@@ -1,0 +1,22 @@
+{
+  "name": "tcp-sms-auth",
+  "version": "0.0.1",
+  "description": "a simple and secure mobile device authentication scheme over tcp and sms",
+  "author": "Umran Hussain",
+  "main": "protocol.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/umran/tcp-sms-auth"
+  },
+  "bugs": {
+    "url": "https://github.com/tcp-sms-auth/issues"
+  },
+  "keywords": [
+    "sms",
+    "authentication"
+  ],
+  "dependencies": {
+    "tweetnacl": "^1.0.0-rc.1"
+  },
+  "license": "MIT"
+}
