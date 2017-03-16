@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "a simple and secure mobile device authentication scheme over ip and sms",
   "author": "Umran Hussain",
-  "main": "protocol.js",
+  "main": "lib/protocol.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/umran/tcp-sms-auth"
