@@ -1,7 +1,7 @@
 # tcp-sms-auth
 A simple mobile device authentication scheme over ip and sms
 
-#### Usage and  code example
+### Usage and  code example
 
 The following example demonstrates the steps involved in the authentication process. Although the client and server identity keys in this example are created on the fly, in an actual implementation these are supposed to be long-lived, that is to say that they must be preserved for as long as the server and device are to remain authenticated. Furthermore, the cache and storage classes included in this example are mere placeholders. In a potential implementation we only need to make sure that the custom storage and cache classes have the methods defined in this example.
 
