@@ -20,7 +20,7 @@ var initiateObject = client.initiate('7774272')
 var challengeObject = server.challenge(initiateObject)
 
 // client calls back with a response
-var responseObject = client.respond(challengeObject.http, challengeObject.http.nonce)
+var responseObject = client.respond(challengeObject.http, challengeObject.sms.challenge)
 
 // server terminates the protocol upon response
 var terminationObject = server.terminate(responseObject)
