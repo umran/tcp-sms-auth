@@ -1,5 +1,5 @@
 # tcp-sms-auth
-A simple mobile device authentication scheme over ip and sms
+A simple mobile device authentication scheme over ip and sms originally defined at https://saltwatercynic.com/an-sms-authentication-scheme-using-elliptic-curve-diffie-hellman/
 
 ### Usage and  code example
 
