@@ -1,8 +1,8 @@
-var primitives = require('../lib/crypto_primitives')
-var Cache = require('../lib/cache')
-var Store = require('../lib/store')
-var ProtocolClient = require('../lib/protocol_client')
-var ProtocolServer = require('../lib/protocol_server')
+var primitives = require('../src/crypto_primitives')
+var Cache = require('../src/cache')
+var Store = require('../src/store')
+var ProtocolClient = require('../src/protocol_client')
+var ProtocolServer = require('../src/protocol_server')
 
 var clientIdKeys = primitives.genSigningKeys()
 var serverIdKeys = primitives.genSigningKeys()
@@ -14,7 +14,7 @@ var client = new ProtocolClient(clientIdKeys)
 var server = new ProtocolServer(serverIdKeys, serverCache, serverStore)
 
 // client initiates the protocol
-var initiateObject = client.initiate('7774272')
+var initiateObject = client.initiate('7012345')
 
 // server responds with a challenge
 var challengeObject = server.challenge(initiateObject)
