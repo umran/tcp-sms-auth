@@ -3,19 +3,20 @@ var operations = require('./crypto_operations')
 
 function ProtocolClient(idKeys, cache, store) {
   this._idKeys = idKeys
-  this._encKeys = primitives.genEncryptionKeys()
+  this._encKeys
+  this._signedEncPubKey
+  this._secretKey
+  this._number
 }
 
 ProtocolClient.prototype.initiate = function(number) {
   var self = this
 
-  // sign the encryption public key
-  var signedEncPubKey = operations.signPubKey(self._encKeys.publicKey, self._idKeys.secretKey)
+  self._number = primitives.strToHex(number)
 
   var message = {
     signPubKey: primitives.byteArrayToHex(self._idKeys.publicKey),
-    signedEncPubKey: signedEncPubKey,
-    number: number
+    number: primitives.strToHex(number)
   }
 
   return message
@@ -26,7 +27,6 @@ ProtocolClient.prototype.respond = function(challengeObject, response) {
 
   var signPubKey = challengeObject.signPubKey
   var signedEncPubKey = challengeObject.signedEncPubKey
-  var challenge = challengeObject.challenge
 
   var isVerifiedEncPubKey = operations.verifyPubKey(signedEncPubKey, primitives.hexToByteArray(signPubKey))
   if(!isVerifiedEncPubKey) {
@@ -35,37 +35,24 @@ ProtocolClient.prototype.respond = function(challengeObject, response) {
     }
   }
 
-  // calculate secret shared key
-  var secretKey = primitives.calcEncryptionSecret(primitives.hexToByteArray(signedEncPubKey.pubKey), self._encKeys.secretKey)
+  // recreate the nonceNumberPair from nonce received via sms and client phone number
+  var nonce = primitives.hexToByteArray(response)
+  var nonceNumberPair = primitives.concatArray(nonce, primitives.hexToByteArray(self._number))
 
-  // generate response hash
-  var responseHash = primitives.hash(primitives.hexToByteArray(response))
-  var challengeHash = operations.decryptMessage(challenge, secretKey)
-
-  // compare responseHash and challengeHash. If not equal, abort
-  var isVerifiedChallenge = primitives.verify(challengeHash, responseHash)
-  if(!isVerifiedChallenge) {
-    return {
-      error: 'Challenge response failure'
-    }
-  }
-
-  // update ephemeral encryption key pair
+  // generate client ephemeral key pair
   self._encKeys = primitives.genEncryptionKeys()
+  self._signedEncPubKey = operations.signPubKey(self._encKeys.publicKey, self._idKeys.secretKey)
 
-  // sign ephemeral encryption public key
-  var localSignedEncPubKey = operations.signPubKey(self._encKeys.publicKey, self._idKeys.secretKey)
-
-  // calculate secret between new ephemeral encryption private key and other party's ephemeral encryption public key
-  var ratchetedSecretKey = primitives.calcEncryptionSecret(primitives.hexToByteArray(signedEncPubKey.pubKey), self._encKeys.secretKey)
+  // calculate secret shared key
+  self._secretKey = primitives.calcEncryptionSecret(primitives.hexToByteArray(signedEncPubKey.pubKey), self._encKeys.secretKey)
 
   // encrypt response with new secret key
-  var encResponse = operations.encryptMessage(primitives.hexToByteArray(response), ratchetedSecretKey)
+  var encResponse = operations.encryptMessage(nonceNumberPair, self._secretKey)
 
   // return response object
   var message = {
     signPubKey: primitives.byteArrayToHex(self._idKeys.publicKey),
-    signedEncPubKey: localSignedEncPubKey,
+    signedEncPubKey: self._signedEncPubKey,
     response: encResponse
   }
 
