@@ -1,5 +1,4 @@
 var nacl = require('tweetnacl')
-nacl.auth = require('tweetnacl-auth')
 
 module.exports.genSigningKeys = function() {
   return nacl.sign.keyPair()
@@ -31,10 +30,6 @@ module.exports.decrypt = function(ciphertext, nonce, key) {
 
 module.exports.hash = function(data) {
   return nacl.hash(data)
-}
-
-module.exports.hmac = function(data, key) {
-  return nacl.auth.full(data, key)
 }
 
 module.exports.verify = function(x, y) {

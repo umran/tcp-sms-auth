@@ -16,8 +16,7 @@
     "authentication"
   ],
   "dependencies": {
-    "tweetnacl": "^1.0.0-rc.1",
-    "tweetnacl-auth": "^0.3.1"
+    "tweetnacl": "^1.0.0-rc.1"
   },
   "license": "MIT"
 }
