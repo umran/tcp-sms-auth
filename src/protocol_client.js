@@ -1,7 +1,7 @@
 var primitives = require('./crypto_primitives')
 var operations = require('./crypto_operations')
 
-function ProtocolClient(idKeys, cache, store) {
+function ProtocolClient(idKeys) {
   this._idKeys = idKeys
   this._encKeys
   this._signedEncPubKey
