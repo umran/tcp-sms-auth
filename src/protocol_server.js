@@ -20,9 +20,8 @@ ProtocolServer.prototype.challenge = function(initiateObject) {
   var nonce = primitives.genNonce(16)
   var nonceNumberPair = primitives.concatArray(nonce, primitives.hexToByteArray(number))
 
-  // mac the nonceNumberPair with random key
-  var macKey = primitives.genNonce(64)
-  var nonceNumberPairMAC = primitives.hmac(nonceNumberPair, macKey)
+  // calculate hash of the nonceNumberPair
+  var nonceNumberPairDigest = primitives.hash(nonceNumberPair)
 
   // generate server's ephemeral keys
   self._encKeys = primitives.genEncryptionKeys()
@@ -42,8 +41,7 @@ ProtocolServer.prototype.challenge = function(initiateObject) {
   var cache = {
     signPubKey: signPubKey,
     number: number,
-    nonceNumberPairMAC: primitives.byteArrayToHex(nonceNumberPairMAC),
-    macKey: primitives.byteArrayToHex(macKey)
+    nonceNumberPairDigest: primitives.byteArrayToHex(nonceNumberPairDigest)
   }
 
   self._cache.set(cache)
@@ -80,9 +78,10 @@ ProtocolServer.prototype.terminate = function(responseObject) {
   // decrypt client response
   var response = operations.decryptMessage(encResponse, self._secretKey)
 
-  var responseMAC = primitives.hmac(response, primitives.hexToByteArray(clientRecord.macKey))
+  // calculate response hash
+  var responseDigest = primitives.hash(response)
 
-  var isVerifiedChallenge = primitives.verify(responseMAC, primitives.hexToByteArray(clientRecord.nonceNumberPairMAC))
+  var isVerifiedChallenge = primitives.verify(responseDigest, primitives.hexToByteArray(clientRecord.nonceNumberPairDigest))
 
   if(!isVerifiedChallenge) {
     return {
