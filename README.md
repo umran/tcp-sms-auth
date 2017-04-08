@@ -31,10 +31,10 @@ var server = new ProtocolServer(serverIdKeys, serverCache, serverStore)
 // client initiates the protocol - the only argument is the client's phone number
 var initiateObject = client.initiate('7012345')
 
-// server responds with a challenge - returns a challengeObject which contains an sms message object and an http message object
+// server responds with a challenge - returns a challengeObject which contains an sms message object and an tcp message object
 var challengeObject = server.challenge(initiateObject)
 
-// client calls back with a response - the arguments are the IP message (http object) received from the server and the challenge code received via sms (as a hex string)
+// client calls back with a response - the arguments are the tcp message object received from the server and the challenge code received via sms (as a hex string)
 var responseObject = client.respond(challengeObject.http, challengeObject.sms.challenge)
 
 // server terminates the protocol upon response

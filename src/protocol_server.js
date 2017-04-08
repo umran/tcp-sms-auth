@@ -32,7 +32,7 @@ ProtocolServer.prototype.challenge = function(initiateObject) {
       number: number,
       challenge: primitives.byteArrayToHex(nonce)
     },
-    http: {
+    tcp: {
       signPubKey: primitives.byteArrayToHex(self._idKeys.publicKey),
       signedEncPubKey: self._signedEncPubKey
     }
